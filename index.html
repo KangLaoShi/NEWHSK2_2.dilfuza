@@ -1,692 +1,663 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Uzbek Ch6 Vocab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xitoy tilini o'rganmiz - HSK 2</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdfa; /* Light teal background */
+            color: #1e293b;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+        /* Flip card styles */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .transition-transform-500 { transition: transform 0.5s; }
         
-        body { 
-            font-family: 'Nunito', sans-serif; 
-            background-color: #f3f4f6; 
-            overscroll-behavior: none; /* 防止下拉刷新效果 */
-            user-select: none; /* 禁止选中文本 */
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* 3D Flip Card */
-        .perspective { perspective: 1000px; }
-        .card-inner {
-            position: relative; width: 100%; height: 100%;
-            text-align: center; transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .card-inner.is-flipped { transform: rotateY(180deg); }
-        .card-face {
-            position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .card-front { background: white; color: #1f2937; z-index: 2; }
-        .card-back { background: #2563eb; color: white; transform: rotateY(180deg); z-index: 1; }
-
-        /* Game Grid - Revised for Single Screen & Compact Cards */
-        #game-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 改为4列，使卡片更小更紧凑 */
-            gap: 0.5rem;
-            width: 100%;
-            max-width: 400px; /* 限制最大宽度，防止在大屏上太散 */
-            margin: 0 auto;
-        }
-        .game-card { 
-            aspect-ratio: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center;
-            border-radius: 0.5rem; /* 圆角稍微减小 */
-            font-size: 0.75rem; /* 字体调小 */
-            line-height: 1.1;
-            padding: 0.25rem;
-            text-align: center;
-            word-break: break-word;
-            transition: transform 0.1s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            background-color: white;
-            border: 1px solid #e5e7eb;
-        }
-        .game-card:active { transform: scale(0.95); }
-        .game-card.selected { background-color: #fbbf24; border: 2px solid #d97706; transform: scale(1.05); z-index: 10; font-weight: 800;}
-        .game-card.matched { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .game-card.wrong { background-color: #fee2e2; border: 2px solid #ef4444; animation: shake 0.4s; }
-
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
-
-        /* Navigation */
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #9ca3af; font-size: 0.75rem; }
-        .nav-item.active { color: #2563eb; font-weight: bold; }
-        .nav-item svg { width: 1.5rem; height: 1.5rem; margin-bottom: 2px; }
-
-        /* Hide Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col overflow-hidden fixed bg-gray-50">
+<body>
+    <div id="root"></div>
 
-    <!-- Top Header -->
-    <header class="h-auto min-h-[3.5rem] bg-blue-600 shadow-md flex items-center justify-between z-20 px-4 py-2 shrink-0 relative">
-        <div class="flex flex-col">
-            <h1 class="text-base font-bold text-white tracking-tight">Chapter6: kundalik ishlar</h1>
-            <p class="text-[10px] text-blue-100 scale-95 origin-top-left mt-0.5">Design by Dilfuza (telegram@diffila) 小红书号：410803917</p>
-        </div>
-        <div id="header-score" class="text-xs font-bold text-blue-600 hidden bg-white px-2 py-1 rounded-full absolute right-4 top-1/2 -translate-y-1/2 shadow-sm">Score: 0</div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="flex-1 relative w-full overflow-hidden">
+    <script type="text/babel">
+        // --- DATA SECTION ---
         
-        <!-- VIEW 1: FLASHCARDS -->
-        <div id="view-flashcards" class="w-full h-full flex flex-col items-center justify-start pt-4 pb-20 px-4">
-            
-            <!-- Category Filter (Scrollable) -->
-            <div class="w-full overflow-x-auto no-scrollbar mb-4 shrink-0">
-                <div class="flex space-x-2 px-1">
-                    <button onclick="filterCards('all')" class="cat-btn bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-sm">All</button>
-                    <button onclick="filterCards('verb')" class="cat-btn bg-white text-gray-600 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-sm border">动词 Verbs</button>
-                    <button onclick="filterCards('noun')" class="cat-btn bg-white text-gray-600 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-sm border">名词 Nouns</button>
-                    <button onclick="filterCards('time')" class="cat-btn bg-white text-gray-600 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shadow-sm border">时间 Time</button>
-                </div>
-            </div>
-
-            <!-- Card -->
-            <div class="w-full max-w-sm aspect-[4/5] perspective relative mb-6">
-                <div class="card-inner bg-white" id="flashcard" onclick="flipCard()">
-                    <!-- Front -->
-                    <div class="card-face card-front border border-gray-100">
-                        <div class="absolute top-4 right-4 text-xs font-bold text-gray-300 bg-gray-50 px-2 py-1 rounded" id="card-cat">VERB</div>
-                        <div class="text-blue-500 w-24 h-24 mb-6" id="card-icon"></div>
-                        <h2 class="text-4xl font-bold text-gray-800 mb-2 text-center px-2" id="card-uzbek">...</h2>
-                        <p class="text-gray-400 text-xs mt-4 animate-pulse">点击翻转 / Tap to flip</p>
-                    </div>
-                    <!-- Back -->
-                    <div class="card-face card-back bg-gradient-to-br from-blue-500 to-blue-600">
-                        <h3 class="text-2xl font-bold mb-1" id="card-chinese">...</h3>
-                        <div class="w-8 h-0.5 bg-white/30 my-2 rounded"></div>
-                        <h3 class="text-xl font-semibold text-blue-100 italic mb-6" id="card-english">...</h3>
-                        <div class="absolute bottom-6 opacity-50 w-8 h-8" id="card-icon-sm"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Controls -->
-            <div class="flex items-center justify-between w-full max-w-sm px-2 shrink-0">
-                <button onclick="prevCard()" class="p-4 rounded-full bg-white shadow text-gray-500 active:bg-gray-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-                </button>
-                <div class="text-xs font-mono text-gray-400" id="card-counter">1/100</div>
-                <button onclick="speakWord()" class="p-5 rounded-full bg-blue-600 shadow-lg shadow-blue-200 text-white active:scale-95 transition transform">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-                </button>
-                <button onclick="nextCard()" class="p-4 rounded-full bg-white shadow text-gray-500 active:bg-gray-100">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- VIEW 2: GAME (Optimized for One Screen) -->
-        <div id="view-game" class="w-full h-full hidden flex flex-col px-4 pt-4 pb-20">
-            <!-- Game Header -->
-            <div class="flex justify-between items-end mb-4 shrink-0">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-800">配对消除</h2>
-                    <p class="text-xs text-gray-500">点击单词和对应中文</p>
-                </div>
-                <button onclick="initGame()" class="text-xs bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-bold shadow-sm active:scale-95 transition">
-                    <span class="mr-1">↻</span> 刷新
-                </button>
-            </div>
-            
-            <!-- Game Board Area (Centered Flex) -->
-            <div class="flex-1 flex flex-col justify-center w-full">
-                <div id="game-grid">
-                    <!-- Javascript will populate this -->
-                </div>
-            </div>
-        </div>
-
-        <!-- VIEW 3: QUIZ -->
-        <div id="view-quiz" class="w-full h-full hidden flex flex-col items-center justify-center pt-4 pb-20 px-6">
-            <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg p-6 relative border border-gray-100">
-                <div class="absolute top-0 left-0 h-1.5 bg-green-500 rounded-tl-2xl rounded-tr-2xl transition-all duration-300" id="quiz-progress" style="width: 10%"></div>
-                
-                <div class="text-center mb-6 mt-2">
-                    <div id="quiz-icon" class="w-16 h-16 text-blue-500 mx-auto mb-3"></div>
-                    <h2 class="text-2xl font-bold text-gray-800 leading-tight" id="quiz-question">...</h2>
-                    <button onclick="speakWord(currentQuizItem.u)" class="text-blue-400 text-xs mt-3 flex items-center justify-center mx-auto gap-1 bg-blue-50 px-3 py-1 rounded-full">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg> 
-                        听发音
-                    </button>
-                </div>
-
-                <div id="quiz-options" class="flex flex-col gap-2.5">
-                    <!-- Options -->
-                </div>
-
-                <div id="quiz-feedback" class="mt-4 text-center font-bold text-sm hidden py-2 rounded"></div>
-                <button onclick="nextQuiz()" id="quiz-next-btn" class="mt-4 w-full bg-blue-600 active:bg-blue-700 text-white py-3 rounded-xl shadow font-bold hidden transition">下一题 Next</button>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="h-16 bg-white border-t border-gray-100 flex justify-around items-center shrink-0 z-30 pb-safe shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
-        <div onclick="switchView('flashcards')" class="nav-item active" id="nav-flashcards">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-            <span class="text-[10px]">背单词</span>
-        </div>
-        <div onclick="switchView('game')" class="nav-item" id="nav-game">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"/></svg>
-            <span class="text-[10px]">连连看</span>
-        </div>
-        <div onclick="switchView('quiz')" class="nav-item" id="nav-quiz">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span class="text-[10px]">测试</span>
-        </div>
-    </nav>
-
-    <script>
-        // --- AUDIO SYSTEM ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            const now = audioCtx.currentTime;
-
-            if (type === 'correct') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
-                gainNode.gain.setValueAtTime(0.3, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-                osc.start(now);
-                osc.stop(now + 0.6);
-            } else {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
-                gainNode.gain.setValueAtTime(0.3, now);
-                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            }
-        }
-
-        // --- NEW: Natural Voice Logic ---
-        function speakWord(text) {
-            const word = text || cardList[cardIndex].u;
-            
-            const onlineUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=uz&client=tw-ob&q=${encodeURIComponent(word)}`;
-            const audio = new Audio(onlineUrl);
-            
-            audio.play().catch(e => {
-                if ('speechSynthesis' in window) {
-                    const u = new SpeechSynthesisUtterance(word);
-                    const voices = window.speechSynthesis.getVoices();
-                    const tr = voices.find(v => v.lang.includes('tr'));
-                    if(tr) u.voice = tr;
-                    u.rate = 0.85;
-                    window.speechSynthesis.speak(u);
-                }
-            });
-        }
-
-        // --- DATA ---
-        // Icons
-        const SVG = {
-            verb: '<path d="M13 10V3L4 14h7v7l9-11h-7z" />',
-            time: '<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />',
-            place: '<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />',
-            noun: '<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />',
-            food: '<path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />',
-            person: '<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />'
-        };
-
-        // Full Vocabulary with English
-        const rawVocab = [
-            { u: "asli", c: "原来", e: "original / by origin", t: "adj" },
-            { u: "ayniqsa", c: "特别", e: "especially", t: "adj" },
-            { u: "aytgancha", c: "顺便说一下", e: "by the way", t: "adj" },
-            { u: "ba'zan", c: "有时", e: "sometimes", t: "time" },
-            { u: "bank", c: "银行", e: "bank", t: "place" },
-            { u: "barvaqt", c: "早", e: "early", t: "time" },
-            { u: "bayram", c: "节日", e: "holiday", t: "noun" },
-            { u: "bemalol", c: "流利地/轻松地", e: "freely / fluently", t: "adj" },
-            { u: "bilmoq", c: "知道/懂", e: "to know", t: "verb" },
-            { u: "bir haftadan keyin", c: "一周后", e: "after one week", t: "time" },
-            { u: "bo'lib ishlamoq", c: "作为...工作", e: "to work as", t: "verb" },
-            { u: "bormoq", c: "去", e: "to go", t: "verb" },
-            { u: "bozor", c: "市场", e: "bazaar / market", t: "place" },
-            { u: "dars qilmoq", c: "学习/做功课", e: "to do homework / study", t: "verb" },
-            { u: "davom ettirmoq", c: "继续", e: "to continue", t: "verb" },
-            { u: "doim", c: "总是", e: "always", t: "time" },
-            { u: "ertaga", c: "明天", e: "tomorrow", t: "time" },
-            { u: "ertalab", c: "早上", e: "in the morning", t: "time" },
-            { u: "fan", c: "学科", e: "subject / science", t: "noun" },
-            { u: "hafta", c: "周", e: "week", t: "time" },
-            { u: "har kuni", c: "每天", e: "every day", t: "time" },
-            { u: "har xil", c: "各种各样", e: "various / different", t: "adj" },
-            { u: "hech kim", c: "没有人", e: "nobody", t: "person" },
-            { u: "hech qachon", c: "从不", e: "never", t: "time" },
-            { u: "hech qayer", c: "无处", e: "nowhere", t: "place" },
-            { u: "hovli", c: "庭院/院子", e: "yard / courtyard", t: "place" },
-            { u: "hozir", c: "现在", e: "now", t: "time" },
-            { u: "ichmoq", c: "喝", e: "to drink", t: "verb" },
-            { u: "indinga", c: "后天", e: "day after tomorrow", t: "time" },
-            { u: "ish", c: "工作 (名词)", e: "work / job", t: "noun" },
-            { u: "ishlamoq", c: "工作 (动词)", e: "to work", t: "verb" },
-            { u: "kamdan-kam", c: "很少", e: "seldom / rarely", t: "time" },
-            { u: "kech", c: "晚/迟", e: "late", t: "time" },
-            { u: "kechki ovqat", c: "晚餐", e: "dinner", t: "food" },
-            { u: "kechqurun", c: "晚上", e: "in the evening", t: "time" },
-            { u: "kelajakda", c: "未来", e: "in the future", t: "time" },
-            { u: "kelasi yil", c: "明年", e: "next year", t: "time" },
-            { u: "kelmoq", c: "来", e: "to come", t: "verb" },
-            { u: "keng", c: "宽/广阔", e: "wide / spacious", t: "adj" },
-            { u: "ketmoq", c: "离开/走", e: "to leave / go away", t: "verb" },
-            { u: "keyin", c: "之后", e: "after / then", t: "time" },
-            { u: "kino", c: "电影", e: "cinema / movie", t: "noun" },
-            { u: "ko'p", c: "多", e: "many / much", t: "adj" },
-            { u: "ko'rmoq", c: "看/见", e: "to see / watch", t: "verb" },
-            { u: "kofe/qahva", c: "咖啡", e: "coffee", t: "food" },
-            { u: "konsert", c: "音乐会", e: "concert", t: "noun" },
-            { u: "kun", c: "天/日", e: "day", t: "time" },
-            { u: "kundalik", c: "日常的/日记", e: "daily / diary", t: "adj" },
-            { u: "kunduz", c: "白天", e: "daytime", t: "time" },
-            { u: "kvartira", c: "公寓", e: "apartment", t: "place" },
-            { u: "maktab", c: "学校", e: "school", t: "place" },
-            { u: "mashina", c: "汽车", e: "car", t: "noun" },
-            { u: "mashina haydamoq", c: "开车", e: "to drive a car", t: "verb" },
-            { u: "milliy", c: "民族的/国家的", e: "national", t: "adj" },
-            { u: "mumtoz musiqa", c: "古典音乐", e: "classical music", t: "noun" },
-            { u: "Mustaqillik kuni", c: "独立日", e: "Independence Day", t: "noun" },
-            { u: "Navro'z", c: "纳吾肉孜节", e: "Navruz (New Year)", t: "noun" },
-            { u: "nishonlamoq", c: "庆祝", e: "to celebrate", t: "verb" },
-            { u: "nonushta qilmoq", c: "吃早餐", e: "to have breakfast", t: "verb" },
-            { u: "odatda", c: "通常", e: "usually", t: "time" },
-            { u: "ovqat pishirmoq", c: "做饭", e: "to cook", t: "verb" },
-            { u: "peshin", c: "中午", e: "noon / midday", t: "time" },
-            { u: "qachon", c: "什么时候", e: "when", t: "time" },
-            { u: "qaytmoq", c: "回来/返回", e: "to return", t: "verb" },
-            { u: "qilmoq", c: "做", e: "to do", t: "verb" },
-            { u: "qimmat", c: "贵", e: "expensive", t: "adj" },
-            { u: "qishloq", c: "村庄", e: "village", t: "place" },
-            { u: "qulay", c: "舒适/方便", e: "comfortable / convenient", t: "adj" },
-            { u: "saroy", c: "宫殿", e: "palace", t: "place" },
-            { u: "saylga chiqmoq", c: "去野餐/游玩", e: "to go for a walk/picnic", t: "verb" },
-            { u: "sevmoq", c: "爱", e: "to love", t: "verb" },
-            { u: "siyosat", c: "政治", e: "politics", t: "noun" },
-            { u: "soat nechada", c: "几点", e: "at what time", t: "time" },
-            { u: "sotib olmoq", c: "买", e: "to buy", t: "verb" },
-            { u: "sport", c: "运动", e: "sport", t: "noun" },
-            { u: "so'ng", c: "然后/之后", e: "after / then", t: "time" },
-            { u: "tanaffus", c: "休息/课间", e: "break / recess", t: "time" },
-            { u: "tanaffusga chiqmoq", c: "去休息", e: "to go on a break", t: "verb" },
-            { u: "tanimoq", c: "认识", e: "to recognize / know", t: "verb" },
-            { u: "taxminan", c: "大约", e: "approximately", t: "adj" },
-            { u: "tez-tez", c: "经常", e: "often", t: "time" },
-            { u: "tinglamoq", c: "听", e: "to listen", t: "verb" },
-            { u: "tugamoq", c: "结束", e: "to finish / end", t: "verb" },
-            { u: "tun", c: "夜晚", e: "night", t: "time" },
-            { u: "turmoq", c: "站/起床/住", e: "to stand / get up / stay", t: "verb" },
-            { u: "tushlik qilmoq", c: "吃午餐", e: "to have lunch", t: "verb" },
-            { u: "uch xonali", c: "三居室的", e: "three-room", t: "adj" },
-            { u: "uchrashmoq", c: "见面", e: "to meet", t: "verb" },
-            { u: "uxlamoq", c: "睡觉", e: "to sleep", t: "verb" },
-            { u: "uxlashga yotmoq", c: "去睡觉", e: "to go to bed", t: "verb" },
-            { u: "uyg'onmoq", c: "醒来", e: "to wake up", t: "verb" },
-            { u: "uy vazifasi", c: "家庭作业", e: "homework", t: "noun" },
-            { u: "xona", c: "房间", e: "room", t: "place" },
-            { u: "yaxshi ko'rmoq", c: "喜欢", e: "to like", t: "verb" },
-            { u: "yemoq", c: "吃", e: "to eat", t: "verb" },
-            { u: "yomon ko'rmoq", c: "讨厌/不喜欢", e: "to dislike / hate", t: "verb" },
-            { u: "yuvinmoq", c: "洗漱", e: "to wash oneself", t: "verb" },
-            { u: "o'qimoq", c: "读/学习", e: "to read / study", t: "verb" },
-            { u: "o'rganmoq", c: "学习(学会)", e: "to learn", t: "verb" },
-            { u: "o'tirish", c: "聚会/坐", e: "sitting / party", t: "noun" },
-            { u: "o'ynamoq", c: "玩", e: "to play", t: "verb" },
-            { u: "o'yin", c: "游戏", e: "game", t: "noun" },
-            { u: "O'zingizmisiz?", c: "是你吗？", e: "Is that you? / Are you alone?", t: "noun" },
-            { u: "shahmat", c: "国际象棋", e: "chess", t: "noun" },
-            { u: "chekmoq", c: "抽烟", e: "to smoke", t: "verb" },
-            { u: "Dushanba", c: "星期一", e: "Monday", t: "time" },
-            { u: "Seshanba", c: "星期二", e: "Tuesday", t: "time" },
-            { u: "Chorshanba", c: "星期三", e: "Wednesday", t: "time" },
-            { u: "Payshanba", c: "星期四", e: "Thursday", t: "time" },
-            { u: "Juma", c: "星期五", e: "Friday", t: "time" },
-            { u: "Shanba", c: "星期六", e: "Saturday", t: "time" },
-            { u: "Yakshanba", c: "星期日", e: "Sunday", t: "time" },
-            { u: "Yanvar", c: "一月", e: "January", t: "time" },
-            { u: "Fevral", c: "二月", e: "February", t: "time" },
-            { u: "Mart", c: "三月", e: "March", t: "time" },
-            { u: "Aprel", c: "四月", e: "April", t: "time" },
-            { u: "May", c: "五月", e: "May", t: "time" },
-            { u: "Iyun", c: "六月", e: "June", t: "time" },
-            { u: "Iyul", c: "七月", e: "July", t: "time" },
-            { u: "Avgust", c: "八月", e: "August", t: "time" },
-            { u: "Sentabr", c: "九月", e: "September", t: "time" },
-            { u: "Oktabr", c: "十月", e: "October", t: "time" },
-            { u: "Noyabr", c: "十一月", e: "November", t: "time" },
-            { u: "Dekabr", c: "十二月", e: "December", t: "time" }
+        const vocabData = [
+            { hanzi: "公交车", pinyin: "gōngjiāochē", uz: "avtobus", ru: "автобус", en: "bus" },
+            { hanzi: "但", pinyin: "dàn", uz: "lekin, ammo", ru: "но", en: "but; yet" },
+            { hanzi: "车站", pinyin: "chēzhàn", uz: "bekat, stantsiya", ru: "остановка, станция", en: "stop; station" },
+            { hanzi: "远", pinyin: "yuǎn", uz: "uzoq", ru: "далеко", en: "far away" },
+            { hanzi: "打车", pinyin: "dǎchē", uz: "taksi ushlamoq", ru: "взять такси", en: "take a taxi" },
+            { hanzi: "还是", pinyin: "háishì", uz: "yaxshisi / yoki", ru: "лучше / или", en: "had better / or" },
+            { hanzi: "北京大学", pinyin: "Běijīng Dàxué", uz: "Pekin universiteti", ru: "Пекинский университет", en: "Peking University" },
+            { hanzi: "啊", pinyin: "a", uz: "a (yuklama)", ru: "а (частица)", en: "ah (particle)" },
+            { hanzi: "万", pinyin: "wàn", uz: "o'n ming", ru: "десять тысяч", en: "ten thousand" },
+            { hanzi: "名", pinyin: "míng", uz: "odamlar uchun hisob so'zi", ru: "сч. слово для людей", en: "m.w. for people" },
+            { hanzi: "网上", pinyin: "wǎngshang", uz: "internetda", ru: "в интернете", en: "online" },
+            { hanzi: "外国", pinyin: "wàiguó", uz: "chet el", ru: "заграница", en: "foreign country" },
+            { hanzi: "间", pinyin: "jiān", uz: "xonalar uchun hisob so'zi", ru: "сч. слово для комнат", en: "m.w. for rooms" },
+            { hanzi: "教室", pinyin: "jiàoshì", uz: "sinfxona", ru: "аудитория", en: "classroom" },
+            { hanzi: "票", pinyin: "piào", uz: "chipta", ru: "билет", en: "ticket" },
+            { hanzi: "别", pinyin: "bié", uz: "...mang / kerak emas", ru: "не надо", en: "don't" },
+            { hanzi: "过来", pinyin: "guòlái", uz: "bu yerga kelmoq", ru: "подойти", en: "come here" }
         ];
 
-        // Process Vocabulary
-        const vocabulary = rawVocab.map((item, idx) => ({
-            id: idx,
-            ...item,
-            iconPath: SVG[item.t] || SVG.noun
-        }));
-
-        // --- APP STATE ---
-        let currentView = 'flashcards';
-        let cardList = [...vocabulary];
-        let cardIndex = 0;
-        let isFlipped = false;
-        
-        let gameCards = [];
-        let firstSelection = null;
-        let gameScore = 0;
-        let matchedPairs = 0;
-
-        let quizList = [];
-        let quizIndex = 0;
-        let currentQuizItem = null;
-
-        // --- UTILS ---
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        const dialogueData = [
+            {
+                title: "Matn 1 / Текст 1 / Text 1",
+                lines: [
+                    { speaker: "白家月", hanzi: "请问，这儿有到北京大学的公交车吗？", pinyin: "Qǐngwèn, zhèr yǒu dào Běijīng Dàxué de gōngjiāochē ma?", uz: "Kechirasiz, bu yerdan Pekin universitetiga avtobus bormi?", ru: "Скажите, пожалуйста, отсюда идет автобус до Пекинского университета?", en: "Excuse me, is there a bus from here to Peking University?" },
+                    { speaker: "服务员", hanzi: "有，但车站有点儿远。", pinyin: "Yǒu, dàn chēzhàn yǒudiǎnr yuǎn.", uz: "Bor, lekin bekat biroz uzoqroq.", ru: "Есть, но остановка немного далеко.", en: "Yes, but the bus stop is a bit far." },
+                    { speaker: "白家月", hanzi: "这儿好打车吗？", pinyin: "Zhèr hǎo dǎchē ma?", uz: "Bu yerda taksi ushlash osonmi?", ru: "Здесь легко поймать такси?", en: "Is it easy to get a taxi around here?" },
+                    { speaker: "服务员", hanzi: "好打车。", pinyin: "Hǎo dǎchē.", uz: "Oson.", ru: "Легко.", en: "Yes, it is." },
+                    { speaker: "白家月", hanzi: "谢谢。安妮，我们还是打车去吧。", pinyin: "Xièxie. Ānnī, wǒmen háishì dǎchē qù ba.", uz: "Rahmat. Enni, yaxshisi biz taksida boramiz.", ru: "Спасибо. Энни, давай лучше на такси поедем.", en: "Thank you. Annie, let's take a taxi instead." },
+                    { speaker: "安妮", hanzi: "好，没问题。", pinyin: "Hǎo, méi wèntí.", uz: "Yaxshi, muammo yo'q.", ru: "Хорошо, без проблем.", en: "Okay, no problem." }
+                ]
+            },
+            {
+                title: "Matn 2 / Текст 2 / Text 2",
+                lines: [
+                    { speaker: "白家月", hanzi: "学校里人真多啊！", pinyin: "Xuéxiào lǐ rén zhēn duō a!", uz: "Maktabda odamlar juda ko'p ekan!", ru: "В университете так много людей!", en: "It's so crowded on campus!" },
+                    { speaker: "安妮", hanzi: "是啊，北京大学有四万多名学生呢！", pinyin: "Shì a, Běijīng Dàxué yǒu sìwàn duō míng xuéshēng ne!", uz: "Ha, Pekin universitetida qirq mingdan ortiq talaba bor!", ru: "Да, в Пекинском университете более сорока тысяч студентов!", en: "Yeah! Peking University has over 40,000 students." },
+                    { speaker: "白家月", hanzi: "你是怎么知道的？", pinyin: "Nǐ shì zěnme zhīdào de?", uz: "Buni qayerdan bildingiz?", ru: "Откуда ты знаешь?", en: "How do you know?" },
+                    { speaker: "安妮", hanzi: "是网上说的，网上还说北京大学有三千多名外国学生。", pinyin: "Shì wǎngshang shuō de, wǎngshang hái shuō Běijīng Dàxué yǒu sānqiān duō míng wàiguó xuéshēng.", uz: "Internetda yozilgan, shuningdek, u yerda uch mingdan ortiq chet ellik talaba borligi aytilgan.", ru: "В интернете написано, еще там сказано, что в Пекинском университете более трех тысяч иностранных студентов.", en: "I read it online. It also says there are more than 3000 international students at Peking University." },
+                    { speaker: "白家月", hanzi: "我也想来这儿学习。", pinyin: "Wǒ yě xiǎng lái zhèr xuéxí.", uz: "Men ham bu yerda o'qishni xohlayman.", ru: "Я тоже хочу здесь учиться.", en: "I'd love to study here too." },
+                    { speaker: "安妮", hanzi: "那边就有一间教室，我们去看一下吧。", pinyin: "Nàbiān jiù yǒu yì jiān jiàoshì, wǒmen qù kàn yíxià ba.", uz: "Ana u yerda bitta sinfxona bor, keling, borib ko'ramiz.", ru: "Там как раз есть аудитория, давай посмотрим.", en: "There's a classroom right over there. Let's go and have a look." }
+                ]
+            },
+            {
+                title: "Matn 3 / Текст 3 / Text 3",
+                lines: [
+                    { speaker: "安妮", hanzi: "家月，你看，学校里有家电影院！", pinyin: "Jiāyuè, nǐ kàn, xuéxiào li yǒu jiā diànyǐngyuàn!", uz: "Jiayue, qara, maktab ichida kinoteatr bor ekan!", ru: "Цзяюэ, смотри, в университете есть кинотеатр!", en: "Jiayue, look! There is a cinema on campus!" },
+                    { speaker: "白家月", hanzi: "是啊，电影院还不小。", pinyin: "Shì a, diànyǐngyuàn hái bù xiǎo.", uz: "Ha, kinoteatr kichkina emas ekan.", ru: "Да, и кинотеатр не маленький.", en: "Yeah, and it's pretty big." },
+                    { speaker: "安妮", hanzi: "他们卖的电影票也很便宜。", pinyin: "Tāmen mài de diànyǐngpiào yě hěn piányi.", uz: "Ular sotayotgan kino chiptalari ham juda arzon.", ru: "Билеты в кино, которые они продают, тоже очень дешевые.", en: "The movie tickets they sell are also very affordable." },
+                    { speaker: "白家月", hanzi: "天啊！有的还不到二十块钱。", pinyin: "Tiān a! Yǒude hái bú dào èrshí kuài qián.", uz: "Xudoyim! Ba'zilari yigirma yuanga ham yetmaydi.", ru: "О боже! Некоторые стоят меньше двадцати юаней.", en: "Goodness! Some are less than 20 yuan." },
+                    { speaker: "安妮", hanzi: "那你想不想去看个电影？", pinyin: "Nà nǐ xiǎng bu xiǎng qù kàn gè diànyǐng?", uz: "Unday bo'lsa, kino ko'rishga borishni xohlaysizmi?", ru: "Тогда не хочешь сходить посмотреть фильм?", en: "So, do you want to watch a movie?" },
+                    { speaker: "白家月", hanzi: "还是别看电影了，北京大学就很好看！", pinyin: "Háishì bié kàn diànyǐng le, Běijīng Dàxué jiù hěn hǎokàn!", uz: "Yaxshisi kino ko'rmaymiz, Pekin universitetining o'zi juda chiroyli!", ru: "Давай лучше не будем смотреть фильм, Пекинский университет и так очень красивый!", en: "Let's not watch a movie now. Peking University itself is already fascinating!" }
+                ]
+            },
+            {
+                title: "Matn 4 / Текст 4 / Text 4",
+                lines: [
+                    { speaker: "独白", hanzi: "北京大学很大，有四万多名学生。学校很漂亮，里边还有家电影院，电影票也不贵，我们有时间还想再过来看个电影。", pinyin: "Běijīng Dàxué hěn dà, yǒu sìwàn duō míng xuéshēng. Xuéxiào hěn piàoliang, lǐbiān hái yǒu jiā diànyǐngyuàn, diànyǐngpiào yě bú guì, wǒmen yǒu shíjiān hái xiǎng zài guòlái kàn gè dianyǐng.", uz: "Pekin universiteti juda katta, qirq mingdan ortiq talaba bor. Maktab juda chiroyli, ichida kinoteatr ham bor, chiptalar qimmat emas, vaqtimiz bo'lsa yana kelib kino ko'rmoqchimiz.", ru: "Пекинский университет очень большой, там более сорока тысяч студентов. Университет очень красивый, внутри есть кинотеатр, билеты в кино недорогие, если будет время, мы хотим прийти сюда еще раз посмотреть фильм.", en: "Peking University is large, with a student population of over 40,000. The campus is beautiful, and there is a cinema on campus. Movie tickets are quite affordable, and when we have time, we'd like to come back to watch a movie." }
+                ]
             }
-            return array;
-        }
+        ];
 
-        // --- INITIALIZATION ---
-        window.onload = () => {
-            cardList = shuffleArray([...vocabulary]); // Shuffle on load
-            renderCard();
-            initGame();
-            initQuiz();
+        const grammarData = [
+            {
+                title: "1. 固定格式“还是……吧”",
+                explanation: {
+                    uz: "Qat'iy shakl '还是...吧' afzal ko'rilgan tanlovni ifodalaydi, 'bunday qilish yaxshiroq' degan ma'noni anglatadi.",
+                    ru: "Фиксированная конструкция '还是...吧' используется для выражения предпочтительного выбора со значением 'лучше уж так'.",
+                    en: "The fixed pattern '还是...吧' is used to express a preferential choice, with the connotation that 'this way is better'."
+                },
+                examples: [
+                    { hanzi: "我们还是打车去吧。", pinyin: "Wǒmen háishì dǎchē qù ba.", uz: "Yaxshisi biz taksida boramiz." },
+                    { hanzi: "那件衣服很好看，还是买那件吧。", pinyin: "Nà jiàn yīfu hěn hǎokàn, háishì mǎi nà jiàn ba.", uz: "U kiyim juda chiroyli, yaxshisi o'shani sotib olaylik." },
+                    { hanzi: "你第一次去北京，还是找个人接你吧。", pinyin: "Nǐ dì yī cì qù Běijīng, háishì zhǎo gè rén jiē nǐ ba.", uz: "Pekinga birinchi marta borishingiz, yaxshisi kimdir sizni kutib olishini so'rang." }
+                ]
+            },
+            {
+                title: "2. 用“多”表达概数",
+                explanation: {
+                    uz: "'多' so'zini raqamdan yoki hisob so'zidan keyin qo'shish miqdorning ko'rsatilgan raqamdan bir oz ko'proq ekanligini bildiradi. O'nlik karrali raqamlar bilan '多' odatda raqamdan keyin keladi. Boshqa holatlarda u hisob so'zidan keyin keladi.",
+                    ru: "Добавление '多' после числительного или счетного слова указывает на то, что количество немного больше указанного. Для чисел, кратных десяти, '多' ставится после числа. Для других - после счетного слова.",
+                    en: "Adding '多' after a number or a numeral phrase indicates that the quantity is slightly greater than the stated number."
+                },
+                examples: [
+                    { hanzi: "北京大学有四万多名学生呢！", pinyin: "Běijīng Dàxué yǒu sìwàn duō míng xuéshēng ne!", uz: "Pekin universitetida qirq mingdan ortiq talaba bor!" },
+                    { hanzi: "教室里有二十多个学生。", pinyin: "Jiàoshì lǐ yǒu èrshí duō gè xuéshēng.", uz: "Sinfxonada yigirmadan ortiq talaba bor." },
+                    { hanzi: "这两个苹果五块多钱。", pinyin: "Zhè liǎng gè píngguǒ wǔ kuài duō qián.", uz: "Bu ikkita olma besh yuandan sal ko'proq turadi." }
+                ]
+            },
+            {
+                title: "3. 动词作定语",
+                explanation: {
+                    uz: "Fe'llar yoki fe'l birikmalari otning xususiyatlarini yoki holatini ko'rsatish uchun otning oldida ('的' bilan) ishlatilishi mumkin.",
+                    ru: "Глаголы или глагольные фразы могут использоваться перед существительным (с '的') для указания характеристик или состояния этого существительного.",
+                    en: "Verbs, verbal phrases can be placed before a noun (with '的') to indicate the characteristics or state of that noun."
+                },
+                examples: [
+                    { hanzi: "他们卖的电影票也很便宜。", pinyin: "Tāmen mài de diànyǐngpiào yě hěn piányi.", uz: "Ular sotayotgan kino chiptalari ham juda arzon." },
+                    { hanzi: "现在学中文的学生很多。", pinyin: "Xiànzài xué zhōngwén de xuéshēng hěn duō.", uz: "Hozir xitoy tilini o'rganayotgan talabalar juda ko'p." },
+                    { hanzi: "这是朋友给我的杯子。", pinyin: "Zhè shì péngyǒu gěi wǒ de bēizi.", uz: "Bu do'stim menga bergan stakan." }
+                ]
+            }
+        ];
+
+        const grammarQuizData = [
+            { q: "我们明天___去长城吧。", options: ["还是", "多", "的"], a: "还是" },
+            { q: "这件衣服两百___块钱。", options: ["还是", "多", "的"], a: "多" },
+            { q: "妈妈做___菜很好吃。", options: ["还是", "多", "的"], a: "的" },
+            { q: "太晚了，你___别去了吧。", options: ["还是", "多", "的"], a: "还是" },
+            { q: "我学习汉语一星期___了。", options: ["还是", "多", "的"], a: "多" },
+            { q: "他昨天买___书很有意思。", options: ["还是", "多", "的"], a: "的" },
+            { q: "下雨了，我们___打车吧。", options: ["还是", "多", "的"], a: "还是" },
+            { q: "这个学校有三千___名学生。", options: ["还是", "多", "的"], a: "多" },
+            { q: "这是朋友送给我___礼物。", options: ["还是", "多", "的"], a: "的" },
+            { q: "电影不好看，我们___回家吧。", options: ["还是", "多", "的"], a: "还是" },
+            { q: "他在北京住了一年___。", options: ["还是", "多", "的"], a: "多" },
+            { q: "昨天来我家里___人是我的同学。", options: ["还是", "多", "的"], a: "的" },
+            { q: "汉字太难了，我___写拼音吧。", options: ["还是", "多", "的"], a: "还是" },
+            { q: "那个杯子五十___块钱。", options: ["还是", "多", "的"], a: "多" },
+            { q: "谁是你最喜欢___老师？", options: ["还是", "多", "的"], a: "的" }
+        ];
+
+        const fillBlanksData = [
+            { sentence: "我们坐 ___ 去学校吧。", answer: "公交车" },
+            { sentence: "这件衣服很漂亮，___ 太贵了。", answer: "但" },
+            { sentence: "火车 ___ 在哪儿？", answer: "车站" },
+            { sentence: "他的家离学校很 ___。", answer: "远" },
+            { sentence: "下雨了，我们 ___ 回家吧。", answer: "打车" },
+            { sentence: "太晚了，我们___休息吧。", answer: "还是" },
+            { sentence: "哥哥在 ___ 学习。", answer: "北京大学" },
+            { sentence: "这里的风景真美 ___！", answer: "啊" },
+            { sentence: "这个大公司有一 ___ 多人。", answer: "万" },
+            { sentence: "我们班有二十 ___ 学生。", answer: "名" },
+            { sentence: "我在 ___ 买了一本书。", answer: "网上" },
+            { sentence: "他有很多 ___ 朋友。", answer: "外国" },
+            { sentence: "这 ___ 房间很大。", answer: "间" },
+            { sentence: "学生们都在 ___ 里上课。", answer: "教室" },
+            { sentence: "我买了两张电影 ___。", answer: "票" },
+            { sentence: "太晚了，你 ___ 玩手机了。", answer: "别" },
+            { sentence: "请你 ___ 看一下这个。", answer: "过来" }
+        ];
+
+        const allWordsBank = ['公交车', '但', '车站', '远', '打车', '还是', '北京大学', '啊', '万', '名', '网上', '外国', '间', '教室', '票', '别', '过来'];
+
+        // --- HELPER COMPONENTS & ICONS ---
+        
+        const AudioIcon = ({className="w-5 h-5"}) => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            </svg>
+        );
+
+        const CheckIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 text-green-500">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        );
+
+        const CrossIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 text-red-500">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        );
+
+        // Utility to speak text
+        const speakText = (text) => {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                window.speechSynthesis.speak(utterance);
+            }
         };
 
-        function switchView(viewId) {
-            // Hide all
-            document.getElementById('view-flashcards').classList.add('hidden');
-            document.getElementById('view-game').classList.add('hidden');
-            document.getElementById('view-quiz').classList.add('hidden');
-            document.getElementById('header-score').classList.add('hidden');
-            
-            // Deactivate nav
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-blue-600'));
-            
-            // Show Target
-            document.getElementById(`view-${viewId}`).classList.remove('hidden');
-            document.getElementById(`nav-${viewId}`).classList.add('active', 'text-blue-600');
-            
-            if(viewId === 'game') document.getElementById('header-score').classList.remove('hidden');
+        // --- MAIN COMPONENTS ---
 
-            currentView = viewId;
-        }
+        const Flashcards = () => {
+            const [currentIndex, setCurrentIndex] = React.useState(0);
+            const [isFlipped, setIsFlipped] = React.useState(false);
 
-        // --- FLASHCARD LOGIC ---
-        function filterCards(cat) {
-            let filtered;
-            if (cat === 'all') filtered = [...vocabulary];
-            else filtered = vocabulary.filter(v => v.t === cat);
-            
-            // Visual feedback for buttons
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-600');
-                if(btn.textContent.toLowerCase().includes(cat)) {
-                    btn.classList.remove('bg-white', 'text-gray-600');
-                    btn.classList.add('bg-blue-600', 'text-white');
-                }
-            });
+            const nextCard = () => {
+                setIsFlipped(false);
+                setTimeout(() => {
+                    setCurrentIndex((prev) => (prev + 1) % vocabData.length);
+                }, 200);
+            };
 
-            cardList = shuffleArray(filtered); // Shuffle whenever filtered
-            cardIndex = 0;
-            isFlipped = false;
-            document.getElementById('flashcard').classList.remove('is-flipped');
-            renderCard();
-        }
+            const prevCard = () => {
+                setIsFlipped(false);
+                setTimeout(() => {
+                    setCurrentIndex((prev) => (prev - 1 + vocabData.length) % vocabData.length);
+                }, 200);
+            };
 
-        function renderCard() {
-            if (cardList.length === 0) return;
-            const item = cardList[cardIndex];
-            
-            document.getElementById('card-uzbek').innerText = item.u;
-            document.getElementById('card-chinese').innerText = item.c;
-            document.getElementById('card-english').innerText = item.e;
-            document.getElementById('card-cat').innerText = item.t.toUpperCase();
-            document.getElementById('card-counter').innerText = `${cardIndex + 1}/${cardList.length}`;
-            
-            // Render Icon
-            const iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${item.iconPath}</svg>`;
-            document.getElementById('card-icon').innerHTML = iconSvg;
-            document.getElementById('card-icon-sm').innerHTML = iconSvg;
-        }
+            const currentCard = vocabData[currentIndex];
 
-        function flipCard() {
-            const el = document.getElementById('flashcard');
-            isFlipped = !isFlipped;
-            el.classList.toggle('is-flipped', isFlipped);
-            
-            // Auto play audio on flip to back if not played recently (optional, keeping manual for now)
-        }
+            return (
+                <div className="flex flex-col items-center w-full max-w-lg mx-auto">
+                    <div className="text-sm font-semibold text-teal-600 mb-4">{currentIndex + 1} / {vocabData.length}</div>
+                    
+                    <div className="w-full h-80 perspective-1000 cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+                        <div className={`relative w-full h-full transition-transform-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+                            {/* Front */}
+                            <div className="absolute w-full h-full backface-hidden bg-white rounded-3xl shadow-xl flex flex-col items-center justify-center border-2 border-teal-100">
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); speakText(currentCard.hanzi); }}
+                                    className="absolute top-4 right-4 p-3 bg-teal-50 text-teal-600 rounded-full hover:bg-teal-100 transition-colors"
+                                >
+                                    <AudioIcon />
+                                </button>
+                                <h2 className="text-7xl font-bold text-gray-800 mb-4">{currentCard.hanzi}</h2>
+                                <p className="text-2xl text-gray-500">{currentCard.pinyin}</p>
+                            </div>
+                            
+                            {/* Back */}
+                            <div className="absolute w-full h-full backface-hidden bg-teal-600 text-white rounded-3xl shadow-xl flex flex-col items-center justify-center rotate-y-180 border-2 border-teal-600 p-6 text-center">
+                                <h2 className="text-3xl font-bold mb-4">{currentCard.uz}</h2>
+                                <div className="w-16 h-1 bg-white/30 rounded mb-4"></div>
+                                <p className="text-xl opacity-90 mb-2">RU: {currentCard.ru}</p>
+                                <p className="text-xl opacity-90">EN: {currentCard.en}</p>
+                            </div>
+                        </div>
+                    </div>
 
-        function nextCard() {
-            cardIndex = (cardIndex + 1) % cardList.length;
-            resetFlip();
-            setTimeout(renderCard, 150);
-        }
+                    <div className="flex gap-4 mt-8">
+                        <button onClick={prevCard} className="px-6 py-3 bg-white text-teal-600 font-bold rounded-xl shadow hover:bg-teal-50 transition-colors">Oldingi</button>
+                        <button onClick={nextCard} className="px-6 py-3 bg-teal-600 text-white font-bold rounded-xl shadow hover:bg-teal-700 transition-colors">Keyingi</button>
+                    </div>
+                </div>
+            );
+        };
 
-        function prevCard() {
-            cardIndex = (cardIndex - 1 + cardList.length) % cardList.length;
-            resetFlip();
-            setTimeout(renderCard, 150);
-        }
+        const VocabQuiz = () => {
+            const [questions, setQuestions] = React.useState([]);
+            const [currentQIndex, setCurrentQIndex] = React.useState(0);
+            const [score, setScore] = React.useState(0);
+            const [showResult, setShowResult] = React.useState(false);
+            const [selectedOption, setSelectedOption] = React.useState(null);
 
-        function resetFlip() {
-            const el = document.getElementById('flashcard');
-            isFlipped = false;
-            el.classList.remove('is-flipped');
-        }
+            // Generate quiz on load
+            React.useEffect(() => {
+                const shuffledVocab = [...vocabData].sort(() => 0.5 - Math.random());
+                const generatedQuestions = shuffledVocab.map(target => {
+                    const wrongOptions = vocabData
+                        .filter(v => v.uz !== target.uz)
+                        .sort(() => 0.5 - Math.random())
+                        .slice(0, 3)
+                        .map(v => v.uz);
+                    const options = [...wrongOptions, target.uz].sort(() => 0.5 - Math.random());
+                    return { question: target.hanzi, answer: target.uz, options: options, audio: target.hanzi };
+                });
+                setQuestions(generatedQuestions);
+            }, []);
 
-        function speakWord(text) {
-            const word = text || cardList[cardIndex].u;
-            
-            // 1. 尝试使用 Google Translate TTS 在线服务 (更自然)
-            // 这里的 client=tw-ob 是公开可用的访问点
-            const onlineUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=uz&client=tw-ob&q=${encodeURIComponent(word)}`;
-            const audio = new Audio(onlineUrl);
-            
-            audio.play().catch(e => {
-                // 2. 如果在线播放失败 (离线或网络限制)，回退到系统发音
-                console.log("Online TTS failed, falling back to system.", e);
-                if ('speechSynthesis' in window) {
-                    const u = new SpeechSynthesisUtterance(word);
-                    // 尝试匹配土耳其语作为乌兹别克语的近似发音 (如果系统不支持 uz)
-                    const voices = window.speechSynthesis.getVoices();
-                    const tr = voices.find(v => v.lang.includes('tr'));
-                    if(tr) u.voice = tr;
-                    u.rate = 0.85;
-                    window.speechSynthesis.speak(u);
-                }
-            });
-        }
+            if (questions.length === 0) return <div>Loading...</div>;
 
-        // --- GAME LOGIC ---
-        function initGame() {
-            const grid = document.getElementById('game-grid');
-            grid.innerHTML = '';
-            gameScore = 0;
-            matchedPairs = 0;
-            firstSelection = null;
-            document.getElementById('header-score').innerText = "Score: 0";
+            const currentQ = questions[currentQIndex];
 
-            // Pick 6 random words (12 cards) for mobile screen space
-            const subset = [...vocabulary].sort(() => 0.5 - Math.random()).slice(0, 6);
-            let deck = [];
-            subset.forEach(item => {
-                deck.push({ id: item.id, content: item.u, type: 'u' }); // Uzbek
-                deck.push({ id: item.id, content: item.c, type: 'c' }); // Chinese
-            });
-            deck.sort(() => 0.5 - Math.random());
-
-            deck.forEach(card => {
-                const el = document.createElement('div');
-                el.className = 'game-card bg-white text-gray-800 font-bold border border-gray-200';
-                el.innerText = card.content;
-                if (card.type === 'c') el.classList.add('text-blue-600');
+            const handleAnswer = (opt) => {
+                if (selectedOption !== null) return;
+                setSelectedOption(opt);
+                if (opt === currentQ.answer) setScore(score + 1);
                 
-                el.onclick = () => handleGameClick(el, card);
-                grid.appendChild(el);
-            });
-        }
-
-        function handleGameClick(el, card) {
-            if (el.classList.contains('matched') || el.classList.contains('selected')) return;
-            
-            if (card.type === 'u') speakWord(card.content);
-
-            el.classList.add('selected');
-
-            if (!firstSelection) {
-                firstSelection = { el, card };
-            } else {
-                // Check match
-                if (firstSelection.card.id === card.id && firstSelection.card.type !== card.type) {
-                    // Match
-                    setTimeout(() => {
-                        el.classList.remove('selected');
-                        firstSelection.el.classList.remove('selected');
-                        el.classList.add('matched');
-                        firstSelection.el.classList.add('matched');
-                        firstSelection = null;
-                    }, 200);
-                    gameScore += 10;
-                    matchedPairs++;
-                    if(matchedPairs === 6) {
-                        setTimeout(() => {
-                            if(confirm('恭喜通关！再来一局？')) initGame();
-                        }, 500);
+                setTimeout(() => {
+                    setSelectedOption(null);
+                    if (currentQIndex < questions.length - 1) {
+                        setCurrentQIndex(currentQIndex + 1);
+                    } else {
+                        setShowResult(true);
                     }
-                } else {
-                    // Mismatch
-                    el.classList.add('wrong');
-                    firstSelection.el.classList.add('wrong');
-                    setTimeout(() => {
-                        el.classList.remove('selected', 'wrong');
-                        firstSelection.el.classList.remove('selected', 'wrong');
-                        firstSelection = null;
-                    }, 600);
-                    gameScore = Math.max(0, gameScore - 2);
-                }
-                document.getElementById('header-score').innerText = `Score: ${gameScore}`;
-            }
-        }
+                }, 1000);
+            };
 
-        // --- QUIZ LOGIC ---
-        function initQuiz() {
-            quizList = [...vocabulary].sort(() => 0.5 - Math.random()).slice(0, 10);
-            quizIndex = 0;
-            renderQuiz();
-        }
+            const reset = () => {
+                setCurrentQIndex(0);
+                setScore(0);
+                setShowResult(false);
+                // regenerate could go here
+            };
 
-        function renderQuiz() {
-            if (quizIndex >= quizList.length) {
-                // Quiz End
-                document.getElementById('quiz-question').innerText = "测试完成!";
-                document.getElementById('quiz-icon').innerHTML = '<svg class="w-full h-full text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-                document.getElementById('quiz-options').innerHTML = `<button onclick="initQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">再测一次 Restart</button>`;
-                document.getElementById('quiz-next-btn').classList.add('hidden');
-                document.getElementById('quiz-feedback').classList.add('hidden');
-                return;
+            if (showResult) {
+                return (
+                    <div className="text-center p-8 bg-white rounded-3xl shadow-xl max-w-md mx-auto border-t-4 border-teal-500">
+                        <h2 className="text-3xl font-bold mb-4 text-gray-800">Natija (Score)</h2>
+                        <p className="text-5xl font-bold text-teal-600 mb-6">{score} / {questions.length}</p>
+                        <button onClick={reset} className="px-8 py-3 bg-teal-600 text-white font-bold rounded-xl shadow-lg hover:bg-teal-700">Qayta boshlash</button>
+                    </div>
+                );
             }
 
-            currentQuizItem = quizList[quizIndex];
-            document.getElementById('quiz-question').innerText = currentQuizItem.u;
-            document.getElementById('quiz-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${currentQuizItem.iconPath}</svg>`;
-            document.getElementById('quiz-progress').style.width = `${((quizIndex)/10)*100}%`;
-            
-            // Options (1 correct, 3 wrong)
-            const wrongOpts = vocabulary.filter(v => v.id !== currentQuizItem.id).sort(() => 0.5 - Math.random()).slice(0, 3);
-            const options = [currentQuizItem, ...wrongOpts].sort(() => 0.5 - Math.random());
+            return (
+                <div className="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+                    <div className="text-sm font-semibold text-teal-600 mb-4 text-center">Savol {currentQIndex + 1} / {questions.length}</div>
+                    
+                    <div className="flex flex-col items-center mb-8">
+                        <button onClick={() => speakText(currentQ.audio)} className="mb-2 p-2 text-teal-500 hover:text-teal-700">
+                             <AudioIcon className="w-8 h-8" />
+                        </button>
+                        <h2 className="text-8xl font-bold text-gray-800">{currentQ.question}</h2>
+                        <p className="text-gray-400 mt-2 text-sm">Tarjimasini toping</p>
+                    </div>
 
-            const container = document.getElementById('quiz-options');
-            container.innerHTML = '';
-            document.getElementById('quiz-feedback').classList.add('hidden');
-            document.getElementById('quiz-next-btn').classList.add('hidden');
+                    <div className="space-y-3">
+                        {currentQ.options.map((opt, i) => {
+                            let btnClass = "w-full p-4 text-lg font-medium rounded-xl border-2 text-left transition-all ";
+                            if (selectedOption === null) {
+                                btnClass += "border-gray-200 hover:border-teal-400 hover:bg-teal-50";
+                            } else if (opt === currentQ.answer) {
+                                btnClass += "border-green-500 bg-green-50 text-green-700";
+                            } else if (opt === selectedOption) {
+                                btnClass += "border-red-500 bg-red-50 text-red-700";
+                            } else {
+                                btnClass += "border-gray-200 opacity-50";
+                            }
 
-            // Auto speak
-            speakWord(currentQuizItem.u);
+                            return (
+                                <button key={i} onClick={() => handleAnswer(opt)} className={btnClass} disabled={selectedOption !== null}>
+                                    {opt}
+                                    {selectedOption && opt === currentQ.answer && <CheckIcon className="float-right" />}
+                                    {selectedOption === opt && opt !== currentQ.answer && <CrossIcon className="float-right" />}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
 
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 py-3 px-4 rounded-xl text-left font-semibold transition active:scale-98';
-                btn.innerHTML = `<div>${opt.c}</div><div class="text-xs text-gray-400 font-normal">${opt.e}</div>`;
-                btn.onclick = () => checkQuiz(btn, opt.id === currentQuizItem.id);
-                container.appendChild(btn);
-            });
-        }
+        const Dialogue = () => {
+            return (
+                <div className="max-w-3xl mx-auto space-y-12">
+                    {dialogueData.map((dialogue, idx) => (
+                        <div key={idx} className="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
+                            <div className="bg-teal-600 text-white p-4 font-bold text-lg">{dialogue.title}</div>
+                            <div className="p-6 space-y-6">
+                                {dialogue.lines.map((line, lIdx) => (
+                                    <div key={lIdx} className={`flex gap-4 p-4 rounded-xl ${line.speaker === '白家月' ? 'bg-blue-50' : line.speaker === '独白' ? 'bg-gray-50' : 'bg-teal-50'}`}>
+                                        <div className="flex-shrink-0 pt-1">
+                                            <button onClick={() => speakText(line.hanzi)} className="p-2 bg-white rounded-full shadow-sm text-teal-600 hover:bg-teal-100">
+                                                <AudioIcon />
+                                            </button>
+                                        </div>
+                                        <div className="flex-grow">
+                                            <div className="font-bold text-gray-500 text-sm mb-1">{line.speaker}</div>
+                                            <div className="text-2xl font-bold text-gray-800 mb-1">{line.hanzi}</div>
+                                            <div className="text-lg text-teal-700 mb-3">{line.pinyin}</div>
+                                            <div className="space-y-1 text-sm text-gray-600 border-t border-gray-200 pt-2">
+                                                <p><strong className="text-gray-400 mr-2">UZ:</strong> {line.uz}</p>
+                                                <p><strong className="text-gray-400 mr-2">RU:</strong> {line.ru}</p>
+                                                <p><strong className="text-gray-400 mr-2">EN:</strong> {line.en}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        };
 
-        function checkQuiz(btn, isCorrect) {
-            const btns = document.getElementById('quiz-options').children;
-            for(let b of btns) b.disabled = true;
+        const GrammarExp = () => (
+            <div className="max-w-3xl mx-auto space-y-8">
+                {grammarData.map((item, idx) => (
+                    <div key={idx} className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                        <h3 className="text-2xl font-bold text-teal-700 mb-6">{item.title}</h3>
+                        <div className="space-y-4 mb-6 p-4 bg-gray-50 rounded-xl">
+                            <p><strong>UZ:</strong> {item.explanation.uz}</p>
+                            <p><strong>RU:</strong> {item.explanation.ru}</p>
+                            <p><strong>EN:</strong> {item.explanation.en}</p>
+                        </div>
+                        <h4 className="font-bold text-gray-500 uppercase text-sm mb-3">Misollar (Examples)</h4>
+                        <ul className="space-y-4">
+                            {item.examples.map((ex, eIdx) => (
+                                <li key={eIdx} className="flex items-start gap-4 text-lg bg-teal-50/50 p-4 rounded-xl border border-teal-100">
+                                    <div className="w-2 h-2 rounded-full bg-teal-500 mt-2.5 flex-shrink-0"></div>
+                                    <div className="flex-grow">
+                                        <div className="flex items-center gap-3 mb-1">
+                                            <span className="font-bold text-gray-800 text-xl">{ex.hanzi}</span>
+                                            <button onClick={() => speakText(ex.hanzi)} className="text-teal-600 hover:text-teal-800 hover:bg-teal-100 p-1.5 rounded-full transition-colors bg-white shadow-sm"><AudioIcon className="w-5 h-5"/></button>
+                                        </div>
+                                        <div className="text-teal-700 font-medium mb-1">{ex.pinyin}</div>
+                                        <div className="text-gray-600 text-sm">{ex.uz}</div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
+            </div>
+        );
 
-            const feedback = document.getElementById('quiz-feedback');
-            feedback.classList.remove('hidden');
-            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        const GrammarQuiz = () => {
+             const [score, setScore] = React.useState(0);
+             const [showResult, setShowResult] = React.useState(false);
+             const [answers, setAnswers] = React.useState({});
 
-            if (isCorrect) {
-                btn.classList.remove('bg-gray-50');
-                btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
-                feedback.innerText = "✅ 回答正确! Correct!";
-                feedback.className = "mt-4 text-center font-bold text-sm text-green-600 bg-green-50 p-2 rounded";
-                playSound('correct'); 
-            } else {
-                btn.classList.remove('bg-gray-50');
-                btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
-                feedback.innerText = `❌ 正确答案: ${currentQuizItem.c}`;
-                feedback.className = "mt-4 text-center font-bold text-sm text-red-600 bg-red-50 p-2 rounded";
-                playSound('wrong'); 
+             const handleSelect = (qIdx, opt) => {
+                 if(showResult) return;
+                 setAnswers({...answers, [qIdx]: opt});
+             };
 
-                // Highlight correct one
-                for(let b of btns) {
-                    if (b.innerHTML.includes(currentQuizItem.c)) {
-                        b.classList.add('bg-green-100', 'border-green-500');
-                    }
-                }
-            }
-        }
+             const submit = () => {
+                 let s = 0;
+                 grammarQuizData.forEach((q, i) => {
+                     if(answers[i] === q.a) s++;
+                 });
+                 setScore(s);
+                 setShowResult(true);
+             };
 
-        function nextQuiz() {
-            quizIndex++;
-            renderQuiz();
-        }
+             return (
+                 <div className="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-lg">
+                     <h2 className="text-2xl font-bold mb-8 text-center text-gray-800">Grammatika Testi</h2>
+                     <div className="space-y-8">
+                         {grammarQuizData.map((q, i) => (
+                             <div key={i} className="border-b border-gray-100 pb-6 last:border-0">
+                                 <p className="text-xl mb-4 font-medium"><span className="text-teal-500 mr-2">{i+1}.</span> {q.q}</p>
+                                 <div className="flex gap-4">
+                                     {q.options.map(opt => {
+                                         let btnClass = "px-6 py-2 rounded-lg border-2 text-lg font-bold transition-colors ";
+                                         if (showResult) {
+                                             if (opt === q.a) btnClass += "border-green-500 bg-green-50 text-green-700";
+                                             else if (answers[i] === opt && opt !== q.a) btnClass += "border-red-500 bg-red-50 text-red-700";
+                                             else btnClass += "border-gray-200 text-gray-400";
+                                         } else {
+                                             btnClass += answers[i] === opt ? "border-teal-500 bg-teal-50 text-teal-700" : "border-gray-200 hover:border-teal-300";
+                                         }
+                                         return (
+                                             <button key={opt} onClick={() => handleSelect(i, opt)} className={btnClass}>{opt}</button>
+                                         );
+                                     })}
+                                 </div>
+                             </div>
+                         ))}
+                     </div>
+                     {!showResult ? (
+                         <div className="mt-8 text-center">
+                             <button onClick={submit} disabled={Object.keys(answers).length !== grammarQuizData.length} className="px-8 py-3 bg-teal-600 text-white font-bold rounded-xl shadow hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed">Tekshirish</button>
+                         </div>
+                     ) : (
+                         <div className="mt-8 p-6 bg-teal-50 rounded-xl text-center border border-teal-200">
+                             <p className="text-2xl font-bold">Natija: <span className="text-teal-600">{score} / {grammarQuizData.length}</span></p>
+                             <button onClick={() => {setShowResult(false); setAnswers({}); setScore(0);}} className="mt-4 px-6 py-2 bg-white text-teal-600 border border-teal-600 font-bold rounded-lg hover:bg-teal-50">Qayta boshlash</button>
+                         </div>
+                     )}
+                 </div>
+             );
+        };
 
+        const FillBlanks = () => {
+             const [answers, setAnswers] = React.useState({});
+             const [showResult, setShowResult] = React.useState(false);
+
+             const handleDrop = (qIdx, word) => {
+                 setAnswers({...answers, [qIdx]: word});
+             };
+
+             const submit = () => {
+                 setShowResult(true);
+             };
+
+             // Calculate available words
+             const usedWords = Object.values(answers);
+             const availableWords = allWordsBank.filter(w => !usedWords.includes(w) || fillBlanksData.filter(d=>d.answer===w).length > usedWords.filter(u=>u===w).length);
+
+             return (
+                 <div className="max-w-4xl mx-auto">
+                     <div className="bg-white p-6 rounded-2xl shadow-md mb-8 sticky top-4 z-10 border-2 border-teal-100">
+                         <h3 className="font-bold text-gray-500 uppercase text-sm mb-3">So'zlar (So'zni tanlang)</h3>
+                         <div className="flex flex-wrap gap-2">
+                             {allWordsBank.map((word, i) => {
+                                 const countReq = fillBlanksData.filter(d=>d.answer===word).length;
+                                 const countUsed = Object.values(answers).filter(u=>u===word).length;
+                                 const isAvailable = countUsed < countReq;
+                                 
+                                 return (
+                                     <button 
+                                        key={i} 
+                                        disabled={!isAvailable || showResult}
+                                        className={`px-4 py-2 rounded-lg font-bold shadow-sm transition-all ${isAvailable && !showResult ? 'bg-teal-100 text-teal-800 hover:bg-teal-200 cursor-grab' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                        draggable={isAvailable && !showResult}
+                                        onDragStart={(e) => e.dataTransfer.setData('text/plain', word)}
+                                     >
+                                         {word}
+                                     </button>
+                                 );
+                             })}
+                         </div>
+                         <p className="text-xs text-gray-400 mt-2">Maslahat: Pastdagi bo'shliqlarni to'ldirish uchun so'zni sudrab tashlang yoki tanlang (Drag & Drop).</p>
+                     </div>
+
+                     <div className="bg-white p-8 rounded-3xl shadow-lg space-y-6">
+                         {fillBlanksData.map((q, i) => {
+                             const parts = q.sentence.split("___");
+                             const isCorrect = showResult && answers[i] === q.answer;
+                             const isWrong = showResult && answers[i] && answers[i] !== q.answer;
+
+                             return (
+                                 <div key={i} className="flex items-center flex-wrap text-xl gap-2 pb-4 border-b border-gray-50 last:border-0"
+                                      onDragOver={(e) => e.preventDefault()}
+                                      onDrop={(e) => {
+                                          e.preventDefault();
+                                          if(!showResult) handleDrop(i, e.dataTransfer.getData('text/plain'));
+                                      }}
+                                 >
+                                     <span className="text-teal-500 font-bold w-6">{i+1}.</span>
+                                     <span>{parts[0]}</span>
+                                     <span 
+                                        className={`inline-block min-w-[80px] h-10 border-b-2 text-center font-bold px-2 cursor-pointer transition-colors ${answers[i] ? 'border-teal-500 text-teal-700' : 'border-gray-300 border-dashed bg-gray-50'} ${isCorrect ? '!border-green-500 !text-green-600 bg-green-50' : ''} ${isWrong ? '!border-red-500 !text-red-600 bg-red-50' : ''}`}
+                                        onClick={() => {
+                                            if(!showResult && answers[i]) {
+                                                const newAns = {...answers};
+                                                delete newAns[i];
+                                                setAnswers(newAns);
+                                            }
+                                        }}
+                                     >
+                                         {answers[i] || ""}
+                                     </span>
+                                     <span>{parts[1]}</span>
+                                     {isCorrect && <CheckIcon />}
+                                     {isWrong && <span className="text-sm font-bold text-red-500 ml-2">({q.answer})</span>}
+                                 </div>
+                             );
+                         })}
+                         
+                         {!showResult ? (
+                             <div className="pt-6 text-center">
+                                <button onClick={submit} className="px-8 py-3 bg-teal-600 text-white font-bold rounded-xl shadow hover:bg-teal-700">Tekshirish</button>
+                             </div>
+                         ) : (
+                             <div className="pt-6 text-center">
+                                <button onClick={() => {setShowResult(false); setAnswers({});}} className="px-8 py-3 bg-white border border-teal-600 text-teal-600 font-bold rounded-xl shadow hover:bg-teal-50">Qayta boshlash</button>
+                             </div>
+                         )}
+                     </div>
+                 </div>
+             );
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = React.useState('flashcards');
+
+            const tabs = [
+                { id: 'flashcards', label: 'Chaqmoq kartalar' },
+                { id: 'vocab', label: "Lug'at testi" },
+                { id: 'dialogue', label: 'Muloqot' },
+                { id: 'grammarExp', label: 'Grammatika' },
+                { id: 'grammarQuiz', label: 'Grammatika testi' },
+                { id: 'fill', label: "So'zlarni to'ldirish" }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col relative overflow-hidden">
+                    {/* Background decorative SVGs */}
+                    <svg className="absolute top-0 left-0 w-full h-96 -z-10 opacity-20 pointer-events-none" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#0d9488" fillOpacity="1" d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,122.7C672,96,768,64,864,64C960,64,1056,96,1152,112C1248,128,1344,128,1392,128L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+                    </svg>
+
+                    <header className="py-12 px-4 text-center">
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-teal-800 mb-2 drop-shadow-sm">
+                            还是打车去北大吧
+                        </h1>
+                        <h2 className="text-lg md:text-xl font-medium text-teal-600 bg-white/60 inline-block px-4 py-1 rounded-full shadow-sm backdrop-blur-sm">
+                            Dilfuza Kāng lǎo shī bilan xitoy tilini o'rganmiz
+                        </h2>
+                    </header>
+
+                    <main className="flex-grow container mx-auto px-4 pb-20">
+                        {/* Navigation */}
+                        <div className="flex flex-wrap justify-center gap-2 mb-10 max-w-4xl mx-auto">
+                            {tabs.map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`px-5 py-2.5 rounded-full font-bold transition-all shadow-sm ${activeTab === tab.id ? 'bg-teal-600 text-white scale-105 shadow-md' : 'bg-white text-gray-600 hover:bg-teal-50 hover:text-teal-700'}`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Content Area */}
+                    <div className="animate-fade-in">
+                        {activeTab === 'flashcards' && <Flashcards />}
+                        {activeTab === 'vocab' && <VocabQuiz />}
+                        {activeTab === 'dialogue' && <Dialogue />}
+                        {activeTab === 'grammarExp' && <GrammarExp />}
+                        {activeTab === 'grammarQuiz' && <GrammarQuiz />}
+                        {activeTab === 'fill' && <FillBlanks />}
+                    </div>
+                </main>
+
+                {/* Required Footer */}
+                <footer className="glass-panel mt-auto py-6 text-center text-sm font-medium text-gray-500 relative z-10 border-t border-teal-100">
+                    <p>HSK 2 NEW3.0 - Lesson 2</p>
+                    <p className="mt-1">© 2026 Dilfuza Kāng lǎo shī (telegram@diffila)</p>
+                </footer>
+            </div>
+        );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
+    
+    <style>
+        /* Simple fade in animation for tab switching */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
 </body>
 </html>
